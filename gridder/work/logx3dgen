@@ -1,0 +1,3 @@
+read avs grid.inp cmo                                                           
+dump gmv grid.gmv cmo                                                           
+finish                                                                          

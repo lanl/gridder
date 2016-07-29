@@ -1,0 +1,12 @@
+
+April 4 version of java UI for gridder
+
+Directory for distribution to ASCEM
+/n/www_meshing_local/ASCEM_setup/java_codes/Gridder
+
+This directory has the java and compiled jar files.
+To run the GUI you will need the gridder executable.
+
+The GUI can also call lagrit and gmv if they are on your path.
+
+

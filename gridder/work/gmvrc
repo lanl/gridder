@@ -1,0 +1,24 @@
+gmvrc
+azim -137.500000   elev 16.000000   twist 0.000000
+mag 1.000000
+nodes on   nodenumbers off
+cellfaces on   celledges off   cellnumbers off
+polygons off   polygonlines off
+axis on   time off   cycle off
+linesize 1   linetype regular
+pointsize 6   pointshape square
+ncontours 10   vector_arrow on
+xreflect off   yreflect off   zreflect off
+xscaleaxis 1.000000   yscaleaxis 1.000000   zscaleaxis 1.000000
+boundingbox on   boundingboxcoords off
+background_red 1.000000   background_green 1.000000   background_blue 1.000000
+display_list on
+trackball off
+beep on
+distscale off
+windowwidth 900  windowheight 900
+texture on
+interactivity 1
+imagetype rgb
+orient_axis on   orient_axis_x 840   orient_axis_y 60
+end_gmvrc

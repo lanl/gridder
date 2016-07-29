@@ -1,0 +1,73 @@
+Usage: 
+gridder (prompt user for values)
+gridder < gridder_input.avs  (input values with option 1 avs file)
+gridder < gridder_input.fehm (input values with option 4 fehm file)
+
+grid.avs  sample avs file for hex grid 
+grid.fehm sample fehm file for hex grid 
+
+Compile mac or linux 
+gcc gridder.c -o gridder
+gcc -lm gridder.c -o gridder
+
+March 29 2010 tamiller@lanl.gov changes:
+  replaced flotran routines with Vectors option writing x(i) y(j) z(k)
+  removed Flotran format, no longer supported and Vectors is similar
+  but without extra embedded character strings
+
+/**************************************************************/
+/*******		Simple Grid Generator           *******/
+/*******						*******/ 
+/*******		by Loraine Lundquist            *******/
+/*******						*******/
+/**************************************************************/
+/*
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                         Copyright, 1995                              C
+C This program was prepared by the Regents of the University of        C
+C California at Los Alamos National Laboratory (the University) under  C
+C Contract No. W-7405-ENG-36 with the U.S. Department of Energy (DOE). C
+C The University has certain rights in the program pursuant to the     C
+C contract and the program should not be copied or distributed outside C
+C your organization. All rights in the program are reserved by the DOE C
+C and the University. Neither the U.S. Government nor the University   C
+C makes any warranty, express or implied, or assumes and liability or  C
+C responsibility for the use of this software.                         C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+*/
+/************************************************************************/
+/*  This program allows the user to create a simple 2-D or 3-D grid by  */
+/*  keyboard input.  The grid may have any number of "regions" in each  */
+/*  axis.  A zone is a region of similar nodal spacing.  That spacing   */
+/*  may be equal(linear), geometric, or logarithmic.  		      	*/
+/*									*/
+/* For each region on each axis, the user must input the beginning node */  
+/* coordinate on the axis being configured, the end node coordinate,    */
+/* and the number of divisions the region is to be divided into.   A    */
+/* division is the space between two nodes, so the number of divisions  */
+/* = number of nodes - 1.  For geometric spacing, the user must also    */
+/* input a geometric factor.  The user will be prompted for each of     */
+/* these values as needed.                                              */
+/*									*/
+/* Of these input values, the number of dimensions, the number of zones */
+/* in an axis, the number of divisions in a zone, and the geometric     */
+/* factor must be greater than 0.  					*/ 
+/*									*/
+/* The maximum number of nodes per axis is MAXNODES = 16385             */
+/* changed simply by changing the constant named MAXNODES, and the 	*/
+/* maximum number of zones per axis MAXZONES = 500, and limits may be 	*/
+/* changed simply by changing the constants MAXNODES and MAXZONES.      */      
+/*									*/
+/* The results are then written to a file called grid.inp.  This        */
+/* file is rewritten upon every run of the program, so save the results */
+/* of each trial to a different file name.                              */
+/*									*/
+/* The input parameters are written to a file called input.grid, so     */
+/* that if the user wants to regenerate the grid without answering all  */
+/* the same questions again, he or she can save input.grid to a		*/ 
+/* different name, and type gridder < new_filename                      */
+/* Be sure to rename input.grid before trying to use it as input file.  */
+/*									*/
+/************************************************************************/
+
+

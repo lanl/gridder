@@ -1,0 +1,24 @@
+# simple tests for gridder
+
+set OSTYPE = `uname -a | awk '{print $1}'` 
+
+if ($OSTYPE == 'Linux') then
+   cp ../gridder_linux gridder
+else if ($OSTYPE == 'Darwin') then
+   cp ../gridder_maci gridder
+else if ($OSTYPE == 'SunOS') then
+   cp ../gridder_sun gridder
+else
+  echo 'OS $OSTYPE not recognized ' 
+  exit 1
+endif
+
+#
+rm *.output
+foreach file (test_gridder_input*)
+echo $file
+gridder < $file
+mv grid.inp $file.output
+end
+
+exit
