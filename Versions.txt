@@ -1,8 +1,12 @@
-Version 3 LA-CC-15-082 
+Version 3 LA-CC-15-082 open source
 
 August 2016 Terry Miller tamiller@lanl.gov
+No longer part of LaGriT LACC-2012-084 
 Cleanup and git repo
 for open source using BSD September 2016
+Using local /n/swdev/GRIDDER/Version_OCT_2013
+which is newer than mercurial 
+local /n/swdev/LAGRIT/clone/lg_util
 
 V3 GRIDDER
 October 2013 lucia@lanl.gov
