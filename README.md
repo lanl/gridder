@@ -10,4 +10,4 @@ Running from the command line, Gridder prompts the user for input such as number
 
 Los Alamos National Security, LLC (LANS) owns the copyright to GRIDDER, which it identifies internally as LA-CC-15-082. The license is BSD with a "modifications must be indicated" clause. See LICENSE for the full text.
 
-![alt tag](https://github.com/losalamos/gridder/screenshots/gridder2_TN.PNG)
+![alt tag](screenshots/gridder2_TN.PNG)
