@@ -51,9 +51,16 @@ See LICENSE.md for the full text.
 /********************************************************************/
  /* Version 3
  *
- * October 2013 lucia@lanl.gov
- * Major change to capability expanding from 3 direction to 7
- * 1) X 2) XY 3) XYZ 4) Y 5) Z 6) XZ 7) YZ
+ * October 11, 2013 by Lucia Short lucia@lanl.gov
+ * Added several dimensions/directions to
+ * 1 - X
+ * 2 - XY
+ * 3 - XYZ
+ * New dimensions/directions are:
+ * 4 - Y
+ * 5 - Z
+ * 6 - XZ
+ * 7 - YZ
  * 
  */
 /********************************************************************/
@@ -409,7 +416,7 @@ FILE *fp_in;
 			//num_dimensions=2;
 			break;
 		default:
-		printf("\nYou can only have specified dimentions and directions.\n");
+		printf("\nYou can only have specified dimensions and directions.\n");
                 error_count++;
                 if (error_count > ERR_LEVEL)
                 {
@@ -576,7 +583,7 @@ FILE *fp_in;
 /****************************************************************************
 * Function: assign_elements_helper() 
 * Calls the assign_elements() with the arguments sorted depending on
-* the dimentions
+* the dimensions
 * 1: X
 * 2: XY
 * 3: XYZ
