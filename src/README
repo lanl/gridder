@@ -1,63 +1,137 @@
+Welcome to Gridder! 
 
-/**************************************************************/
-/*              GRIDDER V3 - Simple Grid Generator            */
-/**************************************************************/
+Online Manual and examples for command line version of gridder
+at https://meshing.lanl.gov/gridder/manual.html 
+
+/**********************************************************************/
+ Los Alamos National Security, LLC (LANS) owns the copyright to gridder,
+ which it identifies internally as LA-CC-15-082. The license is BSD with
+ a "modifications must be indicated" clause.
+ See LICENSE.md for the full text.
+/**********************************************************************/
+
+Gridder generates orthogonal grids as 1-D lines, 2-D rectangles or 3-D 
+rectangular cuboids. The grids can be spaced linearly, logarithmically, 
+or geometrically, and the user can specify different spacing options for 
+different segments along each axis. Gridder breaks each of these segments 
+into divisions based on these spacing options.
+Two files are written, the resulting grid in chosen format and a 
+recording of the user choices so gridder can be rerun again.
+The file "grid.*" is the grid file, "input.grid" are the gridder inputs.
+
+To compile gridder.c 
+gcc gridder.c -lm -o gridder
 
 Usage: 
 gridder (prompt user for values)
 gridder < gridder_input.avs  (input values with option 1 avs file)
 gridder < gridder_input.fehm (input values with option 4 fehm file)
 
-grid.avs  sample avs file for hex grid 
-grid.fehm sample fehm file for hex grid 
 
-Compile mac or linux 
-gcc gridder.c -o gridder
-gcc -lm gridder.c -o gridder
+--------------------------------------------------------
+COMPILE  
+  gcc gridder.c -o gridder
+  gcc -lm gridder.c -o gridder
+  gcc gridder.c -lm -o gridder 
 
+CHECK
+  gridder < input_gridder.avs
+  diff -w grid.inp grid.avs.save
+  gridder < input_gridder.fehm
+  diff -w grid.inp grid.fehm.save
 
-/**************************************************************/
-/*              GRIDDER V3 - Simple Grid Generator            */
-/**************************************************************/
+--------------------------------------------------------
+DEMO Session for command line version of gridder to write grid.inp
+   creates a 1 Dimensional grid with 1 segment
+   This segment is from 0 to 10 with 6 points on X axis 
+   The Y axis and Z axis have 1 value at 0
+   The grid points are connected as 5 line elements
 
-Los Alamos National Security, LLC (LANS) owns the copyright to gridder,
-which it identifies internally as LA-CC-15-082. The license is BSD with
-a "modifications must be indicated" clause.
-See LICENSE.md for the full text.
+The user input values are in (paranthesis).
 
-/************************************************************************/
-/*  This program allows the user to create a simple 2-D or 3-D grid by  */
-/*  keyboard input.  The grid may have any number of "regions" in each  */
-/*  axis.  A zone is a region of similar nodal spacing.  That spacing   */
-/*  may be equal(linear), geometric, or logarithmic.  		      	*/
-/*									*/
-/* For each region on each axis, the user must input the beginning node */  
-/* coordinate on the axis being configured, the end node coordinate,    */
-/* and the number of divisions the region is to be divided into.   A    */
-/* division is the space between two nodes, so the number of divisions  */
-/* = number of nodes - 1.  For geometric spacing, the user must also    */
-/* input a geometric factor.  The user will be prompted for each of     */
-/* these values as needed.                                              */
-/*									*/
-/* Of these input values, the number of dimensions, the number of zones */
-/* in an axis, the number of divisions in a zone, and the geometric     */
-/* factor must be greater than 0.  					*/ 
-/*									*/
+% gridder 
+
+Please input dimension and directions for grid:
+	1 - X...(1-D)
+	2 - XY..(2-D)
+	3 - XYZ.(3-D)
+	4 - Y...(1-D)
+	5 - Z...(1-D)
+	6 - XZ..(2-D)
+	7 - YZ..(2-D)
+(1)
+
+Please input an integer number of regions for axis x.
+(1)
+
+Please input coordinate to BEGIN region 1 of axis x.
+(0.)
+
+Please input coordinate to END region 1 of axis x. 
+(50.)
+
+Please input an integer number of divisions for region 1 of axis x.
+If you would prefer to specify dx, then input 0 here.
+(5)
+
+Please input spacing for region 1:
+0 = more information about spacing.
+1 = equally spaced nodes.
+2 = geometric spacing of nodes.
+3 = logarithmic spacing of nodes, small spacing to large.
+4 = logarithmic spacing of nodes, large spacing to small.
+(1)
+
+xcoords[0] =                    0
+xcoords[1] =                   10
+xcoords[2] =                   20
+xcoords[3] =                   30
+xcoords[4] =                   40
+xcoords[5] =                   50
+
+Please specify output:
+1 = Advanced Visualization Systems (AVS) input specifications.
+2 = Tracer3d coordinate input specifications. 
+3 = Vectors : x(i) y(j) z(k) 
+4 = FEHM coordinate input specifications. 
+(1)
+
+Zone 1
+x boundaries:                    0                     50
+y boundaries:                    0                      0
+z boundaries:                    0                      0
+
+Program gridder has completed.
+The following files have been written:
+
+grid.inp     contains coordinate data in VECTORS format.
+input.tmp    contains input values you have generated during this run.
+
+NOTE: input.grid is generated on first run and will not be overwritten, 
+input.tmp can be overwritten. To save input.tmp, cp or mv  to another file.
+To repeat this run:
+   gridder < input.grid
+
+--------------------------------------------------------
+Demo output grid.inp in AVS format:
+
+    6 5 0 0 0
+    1      0      0      0
+    2      2      0      0
+    3      4      0      0
+    4      6      0      0
+    5      8      0      0
+    6     10      0      0
+    1   1 line    1   2
+    2   1 line    2   3
+    3   1 line    3   4
+    4   1 line    4   5
+    5   1 line    5   6
+--------------------------------------------------------
+
+gridder.c note: 
 /* The maximum number of nodes per axis is MAXNODES = 16385             */
 /* changed simply by changing the constant named MAXNODES, and the 	*/
 /* maximum number of zones per axis MAXZONES = 500, and limits may be 	*/
-/* changed simply by changing the constants MAXNODES and MAXZONES.      */      
-/*									*/
-/* The results are then written to a file called grid.inp.  This        */
-/* file is rewritten upon every run of the program, so save the results */
-/* of each trial to a different file name.                              */
-/*									*/
-/* The input parameters are written to a file called input.grid, so     */
-/* that if the user wants to regenerate the grid without answering all  */
-/* the same questions again, he or she can save input.grid to a		*/ 
-/* different name, and type gridder < new_filename                      */
-/* Be sure to rename input.grid before trying to use it as input file.  */
-/*									*/
-/************************************************************************/
-
+/* changed simply by changing the constants MAXNODES and MAXZONES.
 

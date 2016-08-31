@@ -1,3 +1,4 @@
+#!/bin/csh
 # simple tests for gridder
 
 set OSTYPE = `uname -a | awk '{print $1}'` 
@@ -17,8 +18,12 @@ endif
 rm *.output
 foreach file (test_gridder_input*)
 echo $file
-gridder < $file
+./gridder < $file
 mv grid.inp $file.output
+diff $file.output sample/$file.output > diff_result/$file
 end
+
+echo 'All diff files should be empty'
+ls -la diff_result/
 
 exit

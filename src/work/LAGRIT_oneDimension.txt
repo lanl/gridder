@@ -1,3 +1,0 @@
-read / avs / OUTPUT_oneDimension.txt / mo
-dump / gmv / GMV_oneDimension.txt / mo
-finish

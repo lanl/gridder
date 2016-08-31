@@ -1,0 +1,11 @@
+#reads the avs file and saves it as gmv file
+
+define INPUT_FILE  grid.inp
+define OUTPUT_FILE  figure.gmv
+
+read / avs / INPUT_FILE / mo 
+
+dump / gmv / OUTPUT_FILE / mo 
+
+finish
+

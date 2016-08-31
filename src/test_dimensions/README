@@ -1,0 +1,21 @@
+Author:		Lucia Short
+Contact:	lucia@lanl.gov
+Date:		Oct 11, 2013
+
+The test_dimensions folder runs tests with 1-D X, Y, Z and 2-D XY, XZ, YZ. 
+All the input file for this test are in input directory, all the output in output directory. 
+The output to compare against is in output_examples direcory. 
+The result of the diff command is in diff_result directory. 
+
+To test the grid, run the test.scr script.
+The script runs through the input files in input directory and outputs the result in output directory. 
+Then it checks the differences between the results in output directory and the tested results in 
+output_examples directory. Then it records the output of the diff command in diff_result directory and 
+lists the diff_result directory content. The files in diff_result directory, i.e., 
+listed in the command line should be 0B in size. 
+
+Note: LaGriT can be used to convert the AVS file to GMV for viewing.
+See GMV mesh files in the directory output_gmv
+To convert AVS to GMV use command: 
+   lagrit < avs_to_gmv.lgi
+

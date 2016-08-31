@@ -1,0 +1,153 @@
+Version 3 LA-CC-15-082 
+
+August 2016 Terry Miller tamiller@lanl.gov
+Cleanup and git repo
+for open source using BSD September 2016
+
+V3 GRIDDER
+October 2013 lucia@lanl.gov
+Major change to capability expanding from 3 directions to 7
+ 1: X
+ 2: XY
+ 3: XYZ
+ 4: Y
+ 5: Z
+ 6: XZ
+ 7: YZ
+
+ 
+===================================
+V2 GRIDDER under LACC-2012-084 for LaGriT
+
+June 26 2013 dharp@lanl.gov
+Dylan Harp, EES-16, 505-667-5532
+increase MAXZONES and add includes, fix compiler warnings
+/scratch/er/dharp/source/gridder
+
+209:illposed:gridder$ hg glog
+@  changeset:   2:3a37b55ddbdd
+|  tag:         tip
+|  user:        Dylan Harp <dharp@lanl.gov>
+|  date:        Wed Jun 26 15:31:57 2013 -0600
+|  summary:     Increased the max number of zones
+|
+o  changeset:   1:f5eb7ea2c368
+|  user:        Dylan Harp <dharp@lanl.gov>
+|  date:        Wed Jun 26 14:53:27 2013 -0600
+|  summary:     Made changes to eliminate gcc complaints
+|
+o  changeset:   0:19bdbc4037de
+   user:        Dylan Harp <dharp@lanl.gov>
+   date:        Wed Jun 26 14:48:43 2013 -0600
+   summary:     Gridder allowing more zones from Terry
+
+210:illposed:gridder$ hg diff -r0 -r2
+diff -r 19bdbc4037de -r 3a37b55ddbdd gridder.c
+--- a/gridder.c    Wed Jun 26 14:48:43 2013 -0600
++++ b/gridder.c    Wed Jun 26 15:31:57 2013 -0600
+@@ -134,9 +134,11 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
++#include <string.h>
++#include <stdlib.h>
+ 
+ #define MAXNODES 16385
+-#define MAXZONES 500
++#define MAXZONES 1000
+ #define ERR_LEVEL 3
+ 
+ double xcoords[MAXNODES]; 
+@@ -204,7 +206,7 @@
+                 int num_xregions, int num_yregions, int num_dimensions,
+                 int output, FILE *fp_out);
+ 
+-#endif PROTO
++#endif //PROTO
+ 
+ * MAIN
+@@ -533,7 +535,7 @@
+ int *num_regions;
+ FILE *fp_in;
+    {
+-    int numr = NULL;
++    int numr;
+         /* Stores number of regions before assigning its value to */ 
+         /* num_zones to avoid pointer complications. */
+     int num_nodes = 0;
+
+
+October 19, 2012 "Bui, Quan M" <quanb@lanl.gov>
+Fixed some issues with spacing and number of nodes greater than 9999
+
+March 29 2011 by tamiller@lanl.gov
+ changed precision from 14.8g to 20.12g
+
+March 29 2011 by tamiller@lanl.gov
+ changed Flotran to Vectors format since it is no longer supported 
+
+March 25 2011 by tamiller@lanl.gov
+ fixed loop for writing element connectivity for 1 dimension
+ the connectivity list was writing node numbers higher than max node 
+
+Jan 13 2011 - gridder is now in mercurial hg under lg_util/gridder
+
+
+PVCS:   /pvcs.config/grid_utilities/src/gridder.c_a  $
+Rev 2.0   added write fehm feature from Zora (zvd@lanl.gov)
+
+===================================
+V1 GRIDDER
+ 
+Rev 1.3   16 Jul 2001 16:50:08   tam
+ changed printf for writing AVS hex connectivity so that
+ top of hex is written, then bottom in counter-clockwise rotation
+ 
+Rev 1.2   Fri Jun 25 12:38:34 1999   murphy
+ Added FLOTRAN output
+ 
+Rev 1.0   Tue Jan 21 15:43:36 1997   pvcs
+ 
+Rev 1.6   09/06/95 17:20:16   lund
+ fixed bugs in logarithmic spacing when smallest dx specified
+ 
+Rev 1.5   08/04/95 16:30:48   lund
+ User may now input smallest dx instead of number of divisions.
+ To do this, input 0 for number of divisions.
+ User may now correct axis' coordinates if mistake was made.
+ Geometric spacing is now more accurate.
+ Added error statements to ensure that program will terminate even if input file is incorrect.
+ 
+Rev 1.4   07/10/95 15:11:18   lund
+ fixed geometric spacing
+ fixed zone assignments
+ fixed so that it works on the first run
+ 
+Rev 1.3   07/10/95 15:05:04   lund
+ added log history
+ Rev 1.2
+ Checked in:     02/22/95 12:08:06
+ Last modified:  02/22/95 12:00:30
+ Author id: gable     lines deleted/added/moved: 9/5/0
+     Change connectivity order of quad output. 
+     Quads were being written in reverse order.
+
+Rev 1.1
+ Checked in:     02/22/95 11:01:36
+ Last modified:  02/22/95 11:01:28
+ Author id: llt     lines deleted/added/moved: 2/2/0
+ increased size of arrays
+
+Rev 1.0
+ Checked in:     02/13/95 09:52:42
+ Last modified:  02/13/95 09:50:12
+ Author id: pvcs     lines deleted/added/moved: 0/0/0
+  
+ ===================================
+
+ Original author Loraine Lundquist working as student 
+ Summer of 1995
+ Z# 116284 lund
+
+ ===================================
+

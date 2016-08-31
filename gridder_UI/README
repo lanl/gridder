@@ -1,9 +1,0 @@
-
-April 4 2011 dev demo using java UI for gridder
-
-This directory has the java and compiled jar files.
-To run the GUI you will need the gridder executable.
-
-The GUI can also call lagrit and gmv if they are on your path.
-
-

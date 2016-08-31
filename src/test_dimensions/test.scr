@@ -1,0 +1,54 @@
+#!/bin/csh
+# simple tests for gridder
+
+set OSTYPE = `uname -a | awk '{print $1}'` 
+
+if ($OSTYPE == 'Linux') then
+   cp ../gridder_linux gridder
+else if ($OSTYPE == 'Darwin') then
+   cp ../gridder_maci gridder
+else if ($OSTYPE == 'SunOS') then
+   cp ../gridder_sun gridder
+else
+  echo 'OS $OSTYPE not recognized ' 
+  exit 1
+endif
+
+foreach file(input/1d*)
+	echo $file
+	./gridder < $file
+	echo "Differences:"
+	#get the name of the file
+	# the name is input/2d_file.txt and we need
+	# the name without the folder name
+	set out = `echo $file:q | sed 's/\// /g'`
+	diff grid.inp output_examples/$out[2] > diff_result/$out[2]
+	cat diff_result/$out[2]
+	cp grid.inp output/$out[2]
+end
+
+echo "test two Dimensions >>>>>>>>"
+foreach file(input/2d*)
+	echo $file
+	./gridder < $file
+	echo "Differences:"
+	#get the name of the file
+	# the name is input/2d_file.txt and we need
+	# the name without the folder name
+	set out = `echo $file:q | sed 's/\// /g'`
+	diff grid.inp output_examples/$out[2] > diff_result/$out[2]
+	cat diff_result/$out[2]
+	cp grid.inp output/$out[2]
+end
+
+echo "*****************************************************************"
+echo "If the test ran with no errors, all the files in diff_result"
+echo "folder should be empty, i.e. have 0 bites"
+echo "*****************************************************************"
+ls -la diff_result
+
+#echo "test Vector format 3 >>>>>>>>"
+echo ""
+echo "Test Done."
+
+exit

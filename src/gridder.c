@@ -1,3 +1,4 @@
+/* gridder.c */
 
 /**************************************************************/
 /*              GRIDDER V3 - Simple Grid Generator            */
@@ -44,8 +45,23 @@ See LICENSE.md for the full text.
 /* input.grid before trying to use it as an input file.  		*/
 /************************************************************************/
 
-
 /* MODIFICATIONS:
+ *
+ */
+/********************************************************************/
+ /* Version 3
+ *
+ * October 2013 lucia@lanl.gov
+ * Major change to capability expanding from 3 direction to 7
+ * 1) X 2) XY 3) XYZ 4) Y 5) Z 6) XZ 7) YZ
+ * 
+ */
+/********************************************************************/
+ /* Version 2
+ *
+ * June 26 2013 dharp@lanl.gov
+ * increase MAXZONES and add includes, fix compiler warnings
+ * /scratch/er/dharp/source/gridder
  *
  * March 29 2011 by tamiller@lanl.gov
  * changed precision from 14.8g to 20.12g
@@ -59,11 +75,12 @@ See LICENSE.md for the full text.
  *
  * Jan 13 2011 - gridder is now in mercurial hg under lg_util/gridder
  *
- ********************************************************************/
-/*
  *
-$Log:   /pvcs.config/grid_utilities/src/gridder.c_a  $
+ *Log:   /pvcs.config/grid_utilities/src/gridder.c_a  $
  *    Rev 2.0   added write fehm feature from Zora (zvd@lanl.gov)
+ *
+/********************************************************************/
+ /* Version 1
  * 
  *    Rev 1.3   16 Jul 2001 16:50:08   tam
  * changed printf for writing AVS hex connectivity so that
@@ -76,7 +93,6 @@ $Log:   /pvcs.config/grid_utilities/src/gridder.c_a  $
  * Added FLOTRAN output
  * 
  *    Rev 1.0   Tue Jan 21 15:43:36 1997   pvcs
- *  
  * 
  *    Rev 1.6   09/06/95 17:20:16   lund
  * fixed bugs in logarithmic spacing when smallest dx specified
@@ -84,12 +100,10 @@ $Log:   /pvcs.config/grid_utilities/src/gridder.c_a  $
  *    Rev 1.5   08/04/95 16:30:48   lund
  * User may now input smallest dx instead of number of divisions.
  * To do this, input 0 for number of divisions.
- * 
  * User may now correct axis' coordinates if mistake was made.
- * 
  * Geometric spacing is now more accurate.
- * 
- * Added error statements to ensure that program will terminate even if input file is incorrect.
+ * Added error statements to ensure that program will terminate 
+ * even if input file is incorrect.
  * 
  *    Rev 1.4   07/10/95 15:11:18   lund
  * fixed geometric spacing
@@ -117,18 +131,22 @@ $Log:   /pvcs.config/grid_utilities/src/gridder.c_a  $
  * Author id: pvcs     lines deleted/added/moved: 0/0/0
  *  
  * ===================================
-/* Loraine Lundquist original author 1995 */
-*/
+ * Original author Loraine Lundquist 1995
+ */
+ /***********************************************************/
 
 #include <stdio.h>
 #include <math.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string.h>
+#include <stdlib.h>
 
-#define MAXNODES 16385
-#define MAXZONES 500
+#define MAXNODES 100000
+#define MAXZONES 1000
 #define ERR_LEVEL 3
+#define DEBUG 0
 
 double xcoords[MAXNODES]; 
 double ycoords[MAXNODES];
@@ -161,6 +179,7 @@ void print_tracer_coords();
 void print_vectors_coords();
 void print_zone_bounds(); 
 void assign_elements();
+void assign_elements_helper();
 
 #else
 
@@ -194,8 +213,12 @@ void assign_elements(int num_xnodes, int num_ynodes, int num_znodes,
                 int *num_xelems, int*num_yelems, int *zelems,
                 int num_xregions, int num_yregions, int num_dimensions,
                 int output, FILE *fp_out);
+void assign_elements_helper(int num_xnodes, int num_ynodes, int num_znodes,
+                int *num_xelems, int*num_yelems, int *zelems,
+                int num_xregions, int num_yregions, int num_dimensions,
+                int output, FILE *fp_out);
 
-#endif PROTO
+#endif //PROTO
 
 /*****************************************************************************
 * MAIN
@@ -260,11 +283,11 @@ main()
 	  printf("input.tmp    contains input values you have generated during this run.\n");
 	else
 	  printf("input.grid   contains input values you have generated during this run.\n");
-	printf("\nNOTE: input.grid is generated on first run and will not be overwritten, input.tmp can be overwritten. To save input.tmp, cp or mv  to another file.\n");
+	printf("\nNOTE: input.grid is generated on first run and will not be overwritten.\ninput.tmp can be overwritten. To save input.tmp, cp or mv  to another file.\n");
 	printf("To repeat this run:\n");
 	if (file_exist != -1) 
 	  printf("   cp input.tmp input.grid\n");
-	printf("   gridder < input.grid\n\n", filename); 
+	  printf("   gridder < input.grid\n\n"); 
 	
     }
 
@@ -293,7 +316,8 @@ FILE *fp_in;
 
 	/* Pointers to coordinate arrays 
            to be passed to following functions. */
-	double *xptr = xcoords, *yptr = ycoords, *zptr = zcoords;
+	//double *xptr = xcoords, *yptr = ycoords, *zptr = zcoords;
+	double *coords_ptr;
 
 	/* Store number of elements in each zone in each axis. */
 	int num_xelems[MAXZONES], num_yelems[MAXZONES], num_zelems[MAXZONES];
@@ -306,6 +330,7 @@ FILE *fp_in;
 
         /* Number of dimensions in grid */
 	int num_dimensions;
+	char actual_axis[4] ;
 
 	/* Number of nodes in each axis. */
 	int num_xnodes = 1, num_ynodes = 1, num_znodes = 1;
@@ -314,7 +339,7 @@ FILE *fp_in;
 	int num_xregions=1, num_yregions=1, num_zregions=1;
 
 	/* Number of elements. */
-	int num_elems;
+	int num_elems = 1;
 
 	/* Name of axis being configured (x, y, or z). */
 	char axis;
@@ -345,66 +370,98 @@ FILE *fp_in;
         error_count = 0;
 	do
 	{
-	    printf("Please input an integer number of dimensions for grid.\n");
+	    printf("Please input dimension and directions for grid:\n");
+	    printf("\t1 - X...(1-D)\n");
+	    printf("\t2 - XY..(2-D)\n");
+	    printf("\t3 - XYZ.(3-D)\n");
+	    printf("\t4 - Y...(1-D)\n");
+	    printf("\t5 - Z...(1-D)\n");
+	    printf("\t6 - XZ..(2-D)\n");
+	    printf("\t7 - YZ..(2-D)\n");
 	    scanf("%d", &num_dimensions);
 
-	    if ((num_dimensions < 1) || (num_dimensions > 3))
-            {
-		printf("\nYou can only have 1, 2, or 3 dimensions.\n");
+	//Assign actual dimensions
+	switch(num_dimensions)
+	{
+		case 1:
+			strcpy(actual_axis, "x");
+			break;
+		case 2:
+			strcpy(actual_axis, "xy");
+			break;
+		case 3:
+			strcpy(actual_axis, "xyz");
+			break;
+		case 4:
+			strcpy(actual_axis, "y");
+			//num_dimensions = 1;
+			break;
+		case 5:
+			strcpy(actual_axis, "z");
+			//num_dimensions = 1;
+			break;
+		case 6:
+			strcpy(actual_axis, "xz");
+			//num_dimensions=2;
+			break;
+		case 7:
+			strcpy(actual_axis, "yz");
+			//num_dimensions=2;
+			break;
+		default:
+		printf("\nYou can only have specified dimentions and directions.\n");
                 error_count++;
                 if (error_count > ERR_LEVEL)
                 {
                    printf("You only get %d chances.\nProgram Exiting...\n", ERR_LEVEL);
                    exit(2);
                 }
-            }
+	}
 
-	 } while ((num_dimensions > 3) || (num_dimensions < 1));
+	 } while ((num_dimensions > 7) || (num_dimensions < 1));
+
 
 	fprintf(fp_in, "%d\n", num_dimensions);
+	if(DEBUG) printf("**>Assigned num_dimentsions: %d\n", num_dimensions);
 
    /*********************************************
          Calculation of coordinates in each axis.  
    *********************************************/
-   for (i=0; i < num_dimensions; i++)
-   {
-	if (i==0) 
-        {
-		axis='x';
-		num_xnodes = assign_axis_coords (xptr, axis, num_xelems,
-			&num_xregions, fp_in);
-
-		for (j=0; j < num_xnodes; j++)
-			printf("xcoords[%d] = %20.12g\n", j, xcoords[j]);
-		printf("\n\n");
-
+   int axis_i = 0; //Iterator to iterate through axis 
+   
+   axis = actual_axis[axis_i];
+   do{
+	//create pointers to the parameters
+	int *num_elements;
+	int *num_regions;
+	int *num_nodes;
+	if(axis == 'x'){
+		num_nodes = &num_xnodes;
+		coords_ptr = xcoords;
+		num_elements = num_xelems;
+		num_regions = &num_xregions;
+	}else if(axis == 'y'){
+		num_nodes = &num_ynodes;
+		coords_ptr = ycoords;
+		num_elements = num_yelems;
+		num_regions = &num_yregions;
+	}else if(axis == 'z'){
+		num_nodes = &num_znodes;
+		coords_ptr = zcoords;
+		num_elements = num_zelems;
+		num_regions = &num_zregions;
 	}
+	*num_nodes = assign_axis_coords (coords_ptr, axis, num_elements,
+		num_regions, fp_in);
 
-	else if (i==1) 
-	{
-            axis = 'y';
-	    num_ynodes = assign_axis_coords (yptr, axis, num_yelems,
-			&num_yregions, fp_in);
+	for (j=0; j < *num_nodes; j++)
+		printf("%ccoords[%d] = %20.12g\n", axis,j, *(coords_ptr + j));
+	printf("\n\n");
+	axis = actual_axis[++axis_i];
+	//calculate number of elements
+	num_elems = num_elems * ((*num_nodes) - 1);
+   }while(axis != '\0');
 
-	    for (j=0; j < num_ynodes; j++)
-		printf("ycoords[%d] = %20.12g\n", j, ycoords[j]);
-
-            printf("\n\n");
-	}
-
-	else if (i==2) 
-	{
-		axis = 'z';
-		num_znodes = assign_axis_coords (zptr, axis, num_zelems,
-			&num_zregions, fp_in);
-		for (j=0; j < num_znodes; j++)
-			printf("zcoords[%d] = %20.12g\n", j, zcoords[j]);
-		printf("\n\n");
-	}
-        else
-           printf("%d dimension not recognized, skipping...\n",i);
-
-   } 
    /* end calculating axis coordinates*/
 
 
@@ -433,14 +490,19 @@ FILE *fp_in;
     /* Calculation of number of elements. */	
 
     /* 1-D */
-    if ((num_ynodes <= 1) && (num_znodes <= 1))
-	num_elems = (num_xnodes -1);
+    if ((num_ynodes <= 1) && (num_znodes <= 1)){
+	int num_elems_check = (num_xnodes -1);
+	if (num_elems_check != num_elems){
+		printf("Wrong number of elements\n test = %d ; actual = %d", num_elems_check, num_elems);
+		exit(1);
+	}
+    }
     /* 2-D */
-    else if (num_znodes <= 1)
-	num_elems = ((num_xnodes -1) * (num_ynodes - 1));
+//    else if (num_znodes <= 1)
+//	num_elems = ((num_xnodes -1) * (num_ynodes - 1));
     /* 3-D */
-    else 
-	num_elems = ((num_xnodes - 1) * (num_ynodes - 1) * (num_znodes - 1));
+//    else 
+//	num_elems = ((num_xnodes - 1) * (num_ynodes - 1) * (num_znodes - 1));
 
 
     /* Determination of what type of output desired. */
@@ -454,7 +516,7 @@ FILE *fp_in;
     scanf("%d", &output);
     fprintf(fp_in, "%d", output);
 
-
+    if(DEBUG) printf("Num_dimensions before switch: %d\n", num_dimensions);
     switch(output) { 
       case 1:
         /* If output is AVS, print coordinates in AVS UCD format. */
@@ -465,9 +527,9 @@ FILE *fp_in;
 	  print_zone_bounds(num_xregions, num_yregions, 
 			  num_zregions, regionptrx, regionptry, regionptrz);
 
-	  assign_elements(num_xnodes, num_ynodes, num_znodes, 
+	  assign_elements_helper(num_xnodes, num_ynodes, num_znodes, 
 			  regionptrx, regionptry, regionptrz, 
-			  num_xregions, num_yregions, num_dimensions, 
+			  num_xregions, num_yregions, num_zregions, num_dimensions, 
 			  output, fp_out);
 	  return 1;
 	}
@@ -491,9 +553,9 @@ FILE *fp_in;
         {
 	  print_fehm_coords(num_xnodes, num_ynodes, num_znodes, 
 			   num_elems, num_dimensions, fp_out);
-	  assign_elements(num_xnodes, num_ynodes, num_znodes, 
+	  assign_elements_helper(num_xnodes, num_ynodes, num_znodes, 
 			  regionptrx, regionptry, regionptrz, 
-			  num_xregions, num_yregions, num_dimensions, 
+			  num_xregions, num_yregions, num_zregions, num_dimensions, 
 			  output, fp_out);
 	  fprintf (fp_out, "\n");
 	  fprintf (fp_out, "%-s\n", "stop");
@@ -502,7 +564,7 @@ FILE *fp_in;
 
     default:
        {
-	 printf("Invalid output selection %d\n");
+	 printf("Invalid output selection %d\n",output);
 	 return -1;
        }
     }
@@ -510,6 +572,78 @@ FILE *fp_in;
   }
 
 /* End assign_grid_coords_and_elements() */
+
+/****************************************************************************
+* Function: assign_elements_helper() 
+* Calls the assign_elements() with the arguments sorted depending on
+* the dimentions
+* 1: X
+* 2: XY
+* 3: XYZ
+* 4: Y
+* 5: Z
+* 6: XZ
+* 7: YZ
+****************************************************************************/
+void assign_elements_helper(num_xnodes, num_ynodes, num_znodes, 
+			  regionptrx, regionptry, regionptrz, 
+			  num_xregions, num_yregions, num_zregions, num_dimensions, 
+			  output, fp_out)
+
+int num_xnodes;
+int num_ynodes;
+int num_znodes;
+int *regionptrx;
+int *regionptry;
+int *regionptrz;
+int num_xregions;
+int num_yregions;
+int num_zregions;
+int num_dimensions;
+int output;
+FILE *fp_out;
+{
+	if(DEBUG) printf("***>Nodes: x#: %d, y#: %d, z#: %d\n", num_xnodes, num_ynodes, num_znodes);
+	if(DEBUG) printf("***>Regions: x#: %d, y#: %d, z#: %d\n", num_xregions, num_yregions, num_zregions);
+  if(DEBUG) printf("**>NumDimensions in assign_element_helper: %d\n", num_dimensions);
+  switch(num_dimensions){
+	case 1:
+	case 2:
+	case 3:
+	  assign_elements(num_xnodes, num_ynodes, num_znodes, 
+			  regionptrx, regionptry, regionptrz, 
+			  num_xregions, num_yregions, num_dimensions, 
+			  output, fp_out);
+	  break;
+	case 4:
+	  assign_elements(num_ynodes, num_xnodes, num_znodes, 
+			  regionptrx, regionptry, regionptrz, 
+			  num_xregions, num_yregions, 1, 
+			  output, fp_out);
+	  break;
+	case 5:
+	  assign_elements(num_znodes, num_xnodes, num_ynodes, 
+			  regionptrx, regionptry, regionptrz, 
+			  num_xregions, num_yregions, 1, 
+			  output, fp_out);
+	  break;
+	case 6:
+	  assign_elements(num_xnodes, num_znodes, num_ynodes, 
+			  regionptrx, regionptrz, regionptry, 
+			  num_xregions, num_zregions, 2, 
+			  output, fp_out);
+	  break;
+	case 7:
+	  assign_elements(num_ynodes, num_znodes, num_xnodes, 
+			  regionptry, regionptrz, regionptrx, 
+			  num_yregions, num_zregions, 2, 
+			  output, fp_out);
+	  break;
+	default:
+  	  printf("ERROR: Unknown num dimensions in assign_element_helper: %d\n", num_dimensions);
+	  exit(1);
+  }
+}
 
 /******************************************************************************
 * FUNCTION: assign_axis_coords()
@@ -524,7 +658,7 @@ int *num_elems;
 int *num_regions;
 FILE *fp_in;
    {
-	int numr = NULL;
+	int numr;
 		/* Stores number of regions before assigning its value to */ 
 		/* num_zones to avoid pointer complications. */
 	int num_nodes = 0;
@@ -1426,7 +1560,8 @@ FILE *fp_out;
                num_trials = num_xnodes * (num_ynodes - 1) * (num_znodes - 1);
         }
 
-
+	if(DEBUG) printf("**>Num trials: %d\n", num_trials);
+	if(DEBUG) printf("**>Num_dimensions = %d\n", num_dimensions);	
         for(i=1; i <= num_trials; i++)
 	   {
 
@@ -1476,16 +1611,25 @@ FILE *fp_out;
 
 /* If element is a cube, i.e. if corners 5 and 6 do not both equal */ 
 /* 0, print the connectivity to the given file in AVS format.      */
-	
 	if (num_dimensions == 3) {
 
 /* elements[3], elements[2], elements[6], elements[7], 
    elements[0], elements[1], elements[5], elements[4])
    changed order to AVS counter clockwise top then bottom - tam Jul 2001 */
 	  if (output == 1) {
-	    fprintf(fp_out,"%d  %d hex %4d %4d %4d %4d %4d %4d %4d %4d\n", elem_ident, zone_num, elements[7], elements[6], elements[5], elements[4], elements[3], elements[2], elements[1], elements[0]);
+		fprintf(fp_out, "%d   %d hex ", elem_ident, zone_num);
+		for (j=7; j >= 0; j--){
+		  fprintf(fp_out, "%4d", elements[j]);
+		  fprintf(fp_out, " ");
+                }
+		fprintf(fp_out, "\n");
 	  } else if (output == 4) {
-	    fprintf(fp_out,"%d %4d %4d %4d %4d %4d %4d %4d %4d\n", elem_ident, elements[7], elements[6], elements[5], elements[4], elements[3], elements[2], elements[1], elements[0]);
+	    	fprintf(fp_out, "%d ", elem_ident); 
+		for (j=7; j >=0; j--){
+		  fprintf(fp_out, "%4d", elements[j]);
+		  fprintf(fp_out, " ");
+                }
+		fprintf(fp_out, "\n");
 	  }
 /* If element is a square, i.e. if corners 3 and 4 do not both equal */
 /* 0, print the connectivity to the given file in AVS format.        */
@@ -1494,13 +1638,26 @@ FILE *fp_out;
 
 	} else if (num_dimensions == 2) {
 	  if (output == 1) {
-	    fprintf(fp_out,"%d  %d quad %4d %4d %4d %4d\n", elem_ident, zone_num, elements[3], elements[2], elements[1], elements[0]);
+		if(DEBUG) printf("**>Output 1: %d %d quad ", elem_ident, zone_num);
+		fprintf(fp_out, "%d   %d quad ", elem_ident, zone_num);
+		for (j=3; j >= 0; j--){
+		  fprintf(fp_out, "%4d", elements[j]);
+		  fprintf(fp_out, " ");
+                }
+		fprintf(fp_out, "\n");
+
 	  } else if (output == 4) {
-	    fprintf(fp_out,"%d %4d %4d %4d %4d\n", elem_ident, elements[3], elements[2], elements[1], elements[0]);
+	    	fprintf(fp_out, "%d ", elem_ident); 
+		for (j=3; j >=0; j--){
+		  fprintf(fp_out, "%4d", elements[j]);
+		  fprintf(fp_out, " ");
+                }
+		fprintf(fp_out, "\n");
 	  }
 
 /* If the element is a line, print the connectivity */
 /*  and do not write past the last set of nodes     */
+
 
 	} else {
           if (i < num_trials) {
@@ -1508,19 +1665,23 @@ FILE *fp_out;
 		  if (output == 1) {
 		    fprintf(fp_out, "%d   %d line ", 
 		    elem_ident, zone_num);
-		    for (j=0; j < 2; j++)
+		    for (j=0; j < 2; j++){
 		      fprintf(fp_out, "%4d", elements[j]);
+		      fprintf(fp_out, " ");
+                    }
 		    fprintf(fp_out, "\n");
 		  } 
 
 	       	  else if (output == 4) {
 		    fprintf(fp_out, "%d ", elem_ident); 
-		    for (j=0; j < 2; j++)
+		    for (j=0; j < 2; j++){
 		      fprintf(fp_out, "%4d", elements[j]);
+		      fprintf(fp_out, " ");
+                    }
 		    fprintf(fp_out, "\n");
 		  }
 	  }
-	}   
+	}    
 
 /*--------------------------------*/
 /* Calculation of which zone current element is is. */
@@ -1592,4 +1753,4 @@ FILE *fp_out;
            }	
    }
 
-
+/* end gridder.c */

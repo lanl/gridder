@@ -1,3 +1,4 @@
+#!/bin/csh
 # simple tests for gridder
 
 set OSTYPE = `uname -a | awk '{print $1}'` 
