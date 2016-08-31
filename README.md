@@ -6,7 +6,8 @@ GRIDDER is a simple interactive grid generation tool for creating orthogonal, 2D
 
 Running from the command line, Gridder prompts the user for input such as number of dimensions, number of regions in each dimension, coordinates of region borders, number of divisions in each region, spacing specifications of each region, and output format. Gridder can also accept the necessary information from a file, bypassing the interactive interface. Every time the interactive interface is used, the input parameters are saved to a file so that the same grid can be regenerated from that file.
 
-# Copyright and license
+# Copyright and License
 
-Los Alamos National Security, LLC (LANS) owns the copyright to GRIDDER, which it identifies internally as LA-CC-15-082. The license is BSD with a "modifications must be indicated" clause. See LICENSE.md for the full text.
+Los Alamos National Security, LLC (LANS) owns the copyright to GRIDDER, which it identifies internally as LA-CC-15-082. The license is BSD with a "modifications must be indicated" clause. See LICENSE for the full text.
 
+![alt tag](https://github.com/losalamos/gridder/screenshots/gridder2_TN.PNG)
