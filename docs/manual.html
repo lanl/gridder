@@ -1,0 +1,495 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; Gridder a documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default_lss.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     'a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Gridder a documentation" href="index.html" />
+    <link rel="prev" title="Gridder Manual Contents" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="index.html" title="Gridder Manual Contents"
+             accesskey="P">previous</a></li>
+        <li><a href="index.html">Gridder a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<span id="id1"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<img alt="_images/mesh_500x259.jpg" class="floatright" src="_images/mesh_500x259.jpg" />
+<p>Gridder is a simple interactive grid generation tool for creating orthogonal,
+structured grids with quadralateral (2D) or hexahedral (3D) shaped elements.
+Grid spacing can be even, logarithmic, or geometric.</p>
+<p>Gridder can be run interactively or using an input file with the necessary
+parameters for the grid. For a quick explanation of the questions asked by the
+program in the interactive mode (which also describe the parameters necessary
+for the input file), please see the Gridder&#8217;s <a class="reference internal" href="#tutorial"><em>Quick Tutorial</em></a>.</p>
+<div class="section" id="description-and-capabilites">
+<span id="description"></span><h2>Description and Capabilites<a class="headerlink" href="#description-and-capabilites" title="Permalink to this headline">¶</a></h2>
+<p>Gridder creates orthogonal one-dimensional, two-dimensional, or three-
+dimensional grids. Each dimension can have multiple regions, each with
+different nodal spacing. This spacing can be equal spacing, geometric spacing,
+or logarithmic spacing. The resulting grid can be outputted in AVS (Advanced
+Visualization Systems) format or Tracer 3D format. Coordinate and connectivity
+data are calculated for AVS, but only coordinate data is calculated for
+Tracer3D.</p>
+<p>As it runs, the code asks the user for input such as number of dimensions,
+number of regions in each dimension, coordinates of region borders, number of
+divisions in each region, spacing specifications of each region, and output
+format. The code can also accept the necessary information from a file,
+bypassing the interactive interface. Everytime the interactive interface is
+used, the input parameters are saved to a file so that the same grid can be
+regenerated from that file.</p>
+</div>
+</div>
+<div class="section" id="quick-tutorial">
+<span id="tutorial"></span><h1>Quick Tutorial<a class="headerlink" href="#quick-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="run-gridder">
+<span id="id2"></span><h2>Run Gridder<a class="headerlink" href="#run-gridder" title="Permalink to this headline">¶</a></h2>
+<p>To run gridder in the interactive mode, type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">gridder</span>
+</pre></div>
+</div>
+<p>and then answer the questions that follow.</p>
+<p>To run gridder from an input file, type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">gridder</span> <span class="o">&lt;</span><span class="n">input_filename</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="interactive-mode">
+<span id="id3"></span><h2>Interactive Mode.<a class="headerlink" href="#interactive-mode" title="Permalink to this headline">¶</a></h2>
+<p>You can use Gridder to create a grid to your specifications by simply
+answering its questions. Following is a quick explanation of some of the
+questions it may ask.</p>
+<p><strong>Please input dimensions and directions for grid</strong></p>
+<div class="line-block">
+<div class="line">Enter an integer from 1 to 7 to create grids in the following dimentions/directins:</div>
+<div class="line-block">
+<div class="line"><strong>1</strong> for 1-D in X direction</div>
+<div class="line"><strong>2</strong> for 2-D in XY direction</div>
+<div class="line"><strong>3</strong> for 3-D in XYZ direction</div>
+<div class="line"><strong>4</strong> for 1-D in Y direction</div>
+<div class="line"><strong>5</strong> for 1-D in Z direction</div>
+<div class="line"><strong>6</strong> for 2-D in XZ direction</div>
+<div class="line"><strong>7</strong> for 2-D in YZ direction</div>
+</div>
+</div>
+<p><strong>Please input an integer number of regions for axis x.</strong></p>
+<p>For each axis, gridder can create as many as 50 regions. A region is an area
+with a given kind of spacing. In [example 1](examples.html#example1), there is
+only one region in the x axis, since there is only one type of spacing:
+logarithmic small to large. In [example 2](examples.html#example2), the x axis
+has equal spacing, then it decreases logarithmically from large to small
+spaces, then it logarithmically increases. Thus there are three regions in
+this axis: the first is equal spacing, the second is logarithmic large to
+small, and the third has logarithmic small to large. There is a different
+region for every time there is a different kind of spacing. Different sized
+spacing also requires a separate region. For example, to have 10 nodes spaced
+1 unit apart and then 10 nodes spaced 2 units apart requires two separate
+regions, even though both regions have equal spacing.</p>
+<p><strong>Please input coordinate to BEGIN region 1 of axis x.</strong></p>
+<p>This is the first (smallest coordinate value) node in the x axis. It will be
+the starting point of the first region in the axis. Gridder will not ask for a
+beginning coordinate of any other regions in this axis. The end coordinate of
+the current region will always be the first coordinate of the next region.</p>
+<p><strong>Please input coordinate to END region 1 of axis x.</strong></p>
+<p>This is the last (largest coordinate value) node in the first region. It will
+also be used as the first coordinate of the next region.</p>
+<p><strong>Please input an integer number of divisions for region 1 of axis x.</strong></p>
+<p><strong>If you would prefer to specify dx, then input 0 here.</strong></p>
+<p>Here you can input the number of divisions in the region. For example, if you
+input 10 divisions, the region will have 9 nodes (11 nodes if you count the
+first and last nodes). Inputting 1 division will leave the first and last
+nodes where they are and add no new nodes. If you input 0 here, the code will
+assume that you would prefer to specify the size of a division, rather than
+the number of divisions in a region, and it will ask you more about that
+later.</p>
+<p><strong>Please input smallest dx.</strong></p>
+<p><strong>dx may be made smaller to divide evenly into region.</strong></p>
+<p>If you chose 0 on the previous question, Gridder will now ask you to input a
+value for dx. dx is the size of the smallest division in the region. If the
+number you input for this value does not divide evenly into the region, than
+Gridder will make it smaller in order to make it divide evenly.</p>
+<p><strong>Please input spacing for region 1:</strong></p>
+<p><strong>0 = more information about spacing.</strong></p>
+<p><a class="reference internal" href="#equal-spacing"><em>1 = equally spaced nodes</em></a>.</p>
+<p><a class="reference internal" href="#geometric-spacing"><em>2 = geometric spacing of nodes</em></a>.</p>
+<p><a class="reference internal" href="#logarithmic-spacing"><em>3 = logarithmic spacing of nodes, small spacing to large</em></a>.</p>
+<p><a class="reference internal" href="#logarithmic-spacing"><em>4 = logarithmic spacing of nodes, large spacing to small</em></a>.</p>
+<p>This question asks you to specify what kind of spacing you would like for this
+region that you have just finished describing. 0 will give you a table with a
+little bit more explanation about the spacing. Here you can click on any of
+the possibilities to learn more about them.</p>
+<p><strong>Subsequent Regions</strong></p>
+<p>From here you will be asked to specify the end coordinate, the number of
+divisions, and the type of spacing for all of the subsequent regions in this
+axis.</p>
+<p><strong>Subsequent Axes</strong></p>
+<p>Once you finish inputting the data about the x axis, the program will print
+the coordinates of the given axis, and then ask for information about the next
+axes, depending on how many dimensions you asked for in your grid. The process
+for the other axes is the same as for the x axis.</p>
+<p><strong>Please specify output:</strong></p>
+<p><strong>1 = Advanced Visualization Systems (AVS) input specifications.</strong></p>
+<p><strong>2 = Tracer3d coordinate input specifications.</strong></p>
+<p><strong>3 = Vectors: x(i) y(j) z(k)</strong></p>
+<p><strong>4 = FEHM coordinate input specifications</strong></p>
+<p>Gridder can output information in either AVS format or Tracer3d format. The
+AVS option gives output as Unstructured Cell Data. It includes all the
+connectivity information, as well as the locations of individual nodes. For
+two-dimensional grid, the elements are quadrilaterals. For 3-dimensional
+grids, the elements are hexahedrals. For 1-dimensional grids, the elements are
+lines.</p>
+<p>AVS data also contains material data. Each <a class="reference internal" href="#zones"><em>zone</em></a> of different spacing is given
+a different material type in AVS. (The material numbers are chosen at random).
+A zone is an area with a certain type of spacing, created by the crossing of
+different regions in different axes. In the example figure, each zone is a
+different color.</p>
+<p>Tracer3d formatted data gives only the location of the nodes, with no
+information about elements or connectivity.</p>
+</div>
+<div class="section" id="output-files">
+<span id="id4"></span><h2>Output Files<a class="headerlink" href="#output-files" title="Permalink to this headline">¶</a></h2>
+<p>The output is written to a file called grid.inp. The file will be rewritten upon every run of the program.
+It might be useful to save the results of each trial.</p>
+<p>The input parameters of the grid that were entered interactive or via the input file are saved to
+a file called input.tmp. To
+generate this same grid again without using the interactive mode, copy the
+file to another file name and type:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">gridder</span> <span class="o">&lt;</span><span class="n">file_name</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="non-interactive-mode">
+<span id="id5"></span><h2>Non-Interactive Mode<a class="headerlink" href="#non-interactive-mode" title="Permalink to this headline">¶</a></h2>
+<p>Gridder can also be run with an input file that bypasses the questions of the
+interactive mode. The input file simply contains the answers to each of the
+questions that <a class="reference internal" href="#interactive-mode"><em>the interactive mode</em></a> would have asked.
+For example see <a class="reference external" href="https://meshing.lanl.gov/gridder/example1.html">Input File</a> that generated <a class="reference external" href="https://meshing.lanl.gov/gridder/examples.html">following picture</a></p>
+<p>All input files require:</p>
+<ol class="arabic simple">
+<li>number for dimensions/directions</li>
+<li>number of regions for x axis</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Next steps will be repeated byt he number of Dimenstions and by the order of Directions. For instance, if in previous step integer 6 was entered, then steps 3 to 7 will be repeated 2 times (for 2-D) starting for X direction and then continuing for Z direction.</p>
+</div>
+<ol class="arabic simple" start="3">
+<li>begin coordinate for the region</li>
+<li>end coordinate for the  region. The coordinate to begin region must be &lt; the coordinate to end the region</li>
+<li>number of divisions in the region. Here you can enter 0 for delta</li>
+<li>if you entered 0 in the previous step, enter the smallest delta. It must be &gt; 0 and &lt; region length. Otherwhise, enter number indicating type of spacing for first region</li>
+<li>(This step is optional.) If you entered geometric space (2) in previous step, then enter geometric factor, which should be &gt; 0</li>
+<li>number indicating desired output format</li>
+</ol>
+</div>
+</div>
+<div class="section" id="definitions-and-examples-of-some-terms">
+<span id="definitions"></span><h1>Definitions and Examples of Some Terms<a class="headerlink" href="#definitions-and-examples-of-some-terms" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="regions">
+<span id="id6"></span><h2>Regions<a class="headerlink" href="#regions" title="Permalink to this headline">¶</a></h2>
+<p>A region is a section of an axis with a beginning coordinate, an end
+coordinate, a number of divisions , and a number that indicates the type of
+spacing (equal geometric, logarithmic small to large, or logarithmic large to
+small). If any region in an axis has already been defined, the beginning
+border of the next region is automatically set equal to the end border of the
+previous region. Example 1 shows a set of coordinates on the x-axis with four
+different regions of the same size, each with ten divisions. The first
+consists of equall spaced nodes; the second of geometrically spaced nodes with
+a geometric factor of two; the third of logarithmically spaced nodes, small to
+large; and the fourth of logarithmically spaced nodes, large to small. This is
+actually a two-dimensional example, where the y-axis has only one region with
+one division in order to make the x divisions easier to visualize.</p>
+<img alt="_images/example1.gif" src="_images/example1.gif" />
+</div>
+<div class="section" id="zones">
+<span id="id7"></span><h2>Zones<a class="headerlink" href="#zones" title="Permalink to this headline">¶</a></h2>
+<p>When there are multiple regions on two or more axes, the region boundaries
+cross, forming areas with a certain type of spacing in the x dimension,
+another type of spacing in the y dimension, and (if it is three-dimensional)
+another type of spacing in the z dimension. for example, in a two-dimensional
+grid, the region boundaries of the y-axis cross the region boundaries of the
+x-axis, dividing each region in the x-axis into areas with the same spacing in
+the x dimension, but each with a different type of spacing in the y dimension.
+These areas are referred to as zones. Example 2a has four regions on the
+x-axis, similar to example 1, but now there are two regions on the y-axis. The
+first has ten divisions, and the second has twenty divisions. Both have
+equally spaced nodes. The resulting cross of region borers creates eight
+zones. Example 2b is the same grid as example 2a, but it sohows the zones
+separated for easier visualization.</p>
+<p>In AVS output, the zone number is used as the naterial number. If the user
+defines no properties for these material numbers, AVS will simply show each
+zone as a different color. Otherwise, the user can define these material
+properties to his or her preference, making each zone have different
+properties.</p>
+<img alt="_images/example2a2b.gif" src="_images/example2a2b.gif" />
+</div>
+<div class="section" id="equal-spacing">
+<span id="id8"></span><h2>Equal Spacing<a class="headerlink" href="#equal-spacing" title="Permalink to this headline">¶</a></h2>
+<p>The user may pick one of four kinds of nodal spacing for each region. The
+simplest of these is referred to as equal spacing. Equal spacing of nodes
+simply means that the region is divided equally into the dgiven number of
+divisions. Each division is the same length. The <a class="reference internal" href="#equal"><em>formula</em></a> for calculating the
+coordinates of equally spaced nodes can be found in <a class="reference internal" href="#appendix-1"><em>Appendix 1</em></a>.</p>
+<p>Example 3 shows a grid with four regions on the x-axis, each with equal
+spacing. The first two zones are both ten units long (last coordinate of zone
+munus first coordinate of zone=10) but the first has only three divisions
+while the second has seventeen. The third zone is only five units long but has
+ten divisions, and the fourth zone is twenty units long and also has ten
+divisions.</p>
+<img alt="_images/example3.gif" src="_images/example3.gif" />
+</div>
+<div class="section" id="geometric-spacing">
+<span id="id9"></span><h2>Geometric Spacing<a class="headerlink" href="#geometric-spacing" title="Permalink to this headline">¶</a></h2>
+<p>In a geometrically spaced region, the distance between two consecutive nodes
+changes by a factor given by the user. TWhen geometric spacing is chosen, the
+user will be prompted for a &#8220;geometric factor&#8221; that determines this rate of
+change. For example, with a geometric factor of two, the largest division is
+twice the length of the previous division, which is twice the length of the
+division before that, etc. The coordinates become members of a geometric
+series. The <a class="reference internal" href="#geometric"><em>actual formulas</em></a> used to calculate the coordinates in a
+geometrically spaced series can be found in <a class="reference internal" href="#appendix-1"><em>Appendix 1</em></a>.</p>
+<p>Example 4 shows some sample geometrically spaced regions. Each region is ten
+units long and has 10 divisions. The first has a geometric factor of 1.2, the
+second has a factor of 4, the third ahs a factor of 1.6, and the fourth has a
+factor of 0.625. If a user wants the distance between nodes to shrink by a
+given factor as opposed to growing by that factor, he or she can simply input
+the value of 1 divided by that factor (1/f) when prompted for a geometric
+factor. Zones 3 and 4 in Example 4 demonstrate this relationship. Zone 3 has a
+geometric factor of 1.6, and zone 4 has a geometric factor of 0.625 = 1/1.6.
+They have the same rate of change of distance between nodes, but in opposite
+directions (distances in zone 3 are growing from left to right while distances
+in zone 3 are shrinking from left to right.</p>
+<p>A geometric factor of 1 would result in the equivalent of equal spacing.</p>
+<p>Also notice that the smallest divisions becomes very small before the
+geometric factor gets very large at all. As this length decreses, accuracy
+decreases. I therefore recommend avoidance of large geometric factors as well
+as avoidance of very large numbers of divisions within a small region.</p>
+<img alt="_images/example4.gif" src="_images/example4.gif" />
+</div>
+<div class="section" id="logarithmic-spacing">
+<span id="id10"></span><h2>Logarithmic Spacing<a class="headerlink" href="#logarithmic-spacing" title="Permalink to this headline">¶</a></h2>
+<p>In a region with logarithmic spacing, coordinates of nodes are determined as a
+function of a base 10 logarithm. Since by nature, logarithmic spacing results
+in smaller divisions growing to larger divisions as we move from left to right
+across the region, I have included a separate type of spacing that allws the
+user to assign &#8220;backwards&#8221; logarithmic spacing, where, from left to right, the
+divisions are larger and become smaller. <a class="reference internal" href="#logarithmic"><em>Details</em></a> of how logarithmic spacing is
+calculated can be found in <a class="reference internal" href="#appendix-1"><em>Appendix 1</em></a>.</p>
+<p>Example 5 shows some sample regions with logarithmic spacing. There are 4
+regions on the x-axis, each 10 units long. The first two have 5 divisions
+each, the first with spacing of small divisions to large and the second with
+large to small, and the last two have 30 divisions each, the third with small
+divisions to large and the fourth with large to small.</p>
+<img alt="_images/example5.gif" src="_images/example5.gif" />
+</div>
+</div>
+<div class="section" id="limitations">
+<span id="id11"></span><h1>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="limited-number-of-nodes-and-regions">
+<span id="limited-number"></span><h2>Limited Number of Nodes and Regions<a class="headerlink" href="#limited-number-of-nodes-and-regions" title="Permalink to this headline">¶</a></h2>
+<p>As the program stands now, there can be no more than 16385 nodes in any one
+axis, and no more than 500 regions. If desired, these limits can be easily
+changed in the source code. They are constants that are defined at the
+beginning of the code called MAXNODES and MAXZONES.</p>
+</div>
+<div class="section" id="accuracy">
+<span id="id12"></span><h2>Accuracy<a class="headerlink" href="#accuracy" title="Permalink to this headline">¶</a></h2>
+<p>Coordinates are given with accuracy up to 6 significant digits. If the number
+of divisions becomes very large with respect to the size of the region, or if
+the geometric factor of a region with geometric spacing gets too large, the
+smallest divisions can become too small with respect to the other divisions in
+the grid, and accuracy decays. No more than 6 decimal digits difference in
+length of divisions can be calculated. I recommend avoidance of these
+practices that may result in verry small sized divisions.</p>
+<p><strong>Happy Gridding!</strong></p>
+</div>
+</div>
+<div class="section" id="appendix-i">
+<span id="appendix-1"></span><h1>Appendix I<a class="headerlink" href="#appendix-i" title="Permalink to this headline">¶</a></h1>
+<p>This appendix gives the formulas use to calculate the different kinds of
+spacing available from this grid generator, including equal spacing, geometric
+spacing, and logarithmic spacing. For all of the formulas given in this
+appendix, the following conventions will be used:</p>
+<p><strong>dx</strong> is the distance between first two consecutive nodes in region</p>
+<p><strong>n1</strong> is the first coordinate in the region. This is entered by the user for the first region. For all subsequent regions, n1 is set equal to the last coordinate of the previous region.</p>
+<p><strong>n2</strong> is the second coordinate in the region, etc..</p>
+<p><strong>nx</strong> is the last corrdinate in the region,</p>
+<p><strong>d</strong> is the number of divisions in the region</p>
+<p><strong>x</strong> is the total number of coordinates in region = d + 1.</p>
+<p><strong>f</strong> is the geometric factor.</p>
+<p><strong>L</strong> is the length of the region.</p>
+<p><strong>px</strong> is the percentage associated with node nx.</p>
+<div class="section" id="equal">
+<span id="id13"></span><h2>Equal Spacing<a class="headerlink" href="#equal" title="Permalink to this headline">¶</a></h2>
+<p>Equal spacing of nodes is calculated according to the following formula:</p>
+<div class="line-block">
+<div class="line">dx = (nx -n1)/d</div>
+<div class="line">n2=n1+dx</div>
+<div class="line">n3=n1+2dx...</div>
+<div class="line">nx=n1+x*d</div>
+</div>
+<p>If the region being configured is the first region of the axis, n1 is entered
+as the &#8220;beginning coordinate of the region&#8221; by the user. Ptherwise, n1 is the
+same coordinate that ended the previous region. The program does not duplicate
+this coordinate as a separate node in the axis.</p>
+</div>
+<div class="section" id="geometric">
+<span id="id14"></span><h2>Geometric Spacing<a class="headerlink" href="#geometric" title="Permalink to this headline">¶</a></h2>
+<p>Geometric spacing is calculated according to the following formula:</p>
+<div class="line-block">
+<div class="line">dx = (nx-n1)/f^0 + f^1 + f^2 ... + f^(d-1)</div>
+<div class="line">n2 = n1 + (f^0 * dx)</div>
+<div class="line">n3 = n2 + (f^1 * dx), etc...</div>
+</div>
+</div>
+<div class="section" id="logarithmic">
+<span id="id15"></span><h2>Logarithmic Spacing<a class="headerlink" href="#logarithmic" title="Permalink to this headline">¶</a></h2>
+<p>To achieve logarithmic spacing, all cases are determined with respect to an
+analogous region starting at 1 and ending at 10. The code divides this
+temporary region equally into the given number of divisions, takes the
+logarighm of each of those numbers, and treats the resulting numbers as
+percentages of the size of the actual region. That is the reason for choosing
+the region from 1 to 10: log(1) = 0, and log(10) = 1. Therefore, the first
+coordinate of the region is placed at 0% of the way across the actual region
+(at the beginning), and the last node is placed at 100% of the way across the
+region (at the end). Let&#8217;s consider the simplest example:</p>
+<p>Let&#8217;s say the user actually wants a region that starts at 1 and ends at 10, so
+we need no analogous region. Let&#8217;s also say the he or she wants 9 divisions.
+The code divides the region into 9 equally spaced divisions, giving us the
+coordinates 1, 2, 3, 4 .... 10. It then takes the log of each of these
+numbers, giving us the following percentages: (the code actually calculates
+the logarithms to 6 decimal points precision)</p>
+<p>log(1) = 0% log(2) = 0.310 = 30.1% log(3) = 0.477 = 47.7% log(4) = 0.602 =
+60.2% ... log(10) = 1 = 100% We now calculate the actual coordinates of the
+nodes by the following formula: nx = n1 + (px * L)</p>
+<p>So for example,</p>
+<div class="line-block">
+<div class="line">n1 = n1 + (p1 * L) = 1 + (0% * 9) = 1</div>
+<div class="line">n2 = n1 + (p2 * L) = 1 + (30.1% * 9) = 3.709</div>
+<div class="line">n3 = n1 + (p3 * L) = 1 + (47.7% * 9) = 5.29 , ...etc.</div>
+<div class="line">n10 = 1 + (p10 * L) = 1 + (100% * 9) = 10</div>
+</div>
+<p>The formula for logarithmic spacing, large to small, is similar: nx = n1 -
+(px*L), where n1 in this case is the last coordinate of the region, the end
+border.</p>
+<p>Even if the example above had not begun at 1 and ended at 10, we would have
+followed the same procedure, dividing a region from 1 to 10 into the number of
+divisions given by the user, taking the logs of those numbers, and using them
+as percentage distances across the region.</p>
+<p>Back to <a class="reference external" href="http://meshing.lanl.gov/gridder/gridder.html">Gridder Home Page</a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#description-and-capabilites">Description and Capabilites</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quick-tutorial">Quick Tutorial</a><ul>
+<li><a class="reference internal" href="#run-gridder">Run Gridder</a></li>
+<li><a class="reference internal" href="#interactive-mode">Interactive Mode.</a></li>
+<li><a class="reference internal" href="#output-files">Output Files</a></li>
+<li><a class="reference internal" href="#non-interactive-mode">Non-Interactive Mode</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#definitions-and-examples-of-some-terms">Definitions and Examples of Some Terms</a><ul>
+<li><a class="reference internal" href="#regions">Regions</a></li>
+<li><a class="reference internal" href="#zones">Zones</a></li>
+<li><a class="reference internal" href="#equal-spacing">Equal Spacing</a></li>
+<li><a class="reference internal" href="#geometric-spacing">Geometric Spacing</a></li>
+<li><a class="reference internal" href="#logarithmic-spacing">Logarithmic Spacing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#limitations">Limitations</a><ul>
+<li><a class="reference internal" href="#limited-number-of-nodes-and-regions">Limited Number of Nodes and Regions</a></li>
+<li><a class="reference internal" href="#accuracy">Accuracy</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendix-i">Appendix I</a><ul>
+<li><a class="reference internal" href="#equal">Equal Spacing</a></li>
+<li><a class="reference internal" href="#geometric">Geometric Spacing</a></li>
+<li><a class="reference internal" href="#logarithmic">Logarithmic Spacing</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Gridder Manual Contents</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/manual.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="index.html" title="Gridder Manual Contents"
+             >previous</a></li>
+        <li><a href="index.html">Gridder a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, LANL.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
