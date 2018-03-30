@@ -10,9 +10,8 @@
     
     <title>Introduction &mdash; Gridder a documentation</title>
     
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="static/default_lss.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -23,18 +22,18 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Gridder a documentation" href="index.html" />
-    <link rel="prev" title="Gridder Manual Contents" href="index.html" /> 
+    <link rel="prev" title="Gridder" href="index.html" /> 
   </head>
   <body>
     <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="index.html" title="Gridder Manual Contents"
+          <a href="index.html" title="Gridder"
              accesskey="P">previous</a></li>
         <li><a href="index.html">Gridder a documentation</a> &raquo;</li> 
       </ul>
@@ -47,7 +46,6 @@
             
   <div class="section" id="introduction">
 <span id="id1"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<img alt="eximages/mesh_500x259.jpg" class="floatright" src="eximages/mesh_500x259.jpg" />
 <p>Gridder is a simple interactive grid generation tool for creating orthogonal,
 structured grids with quadralateral (2D) or hexahedral (3D) shaped elements.
 Grid spacing can be even, logarithmic, or geometric.</p>
@@ -163,8 +161,6 @@ for the other axes is the same as for the x axis.</p>
 <p><strong>Please specify output:</strong></p>
 <p><strong>1 = Advanced Visualization Systems (AVS) input specifications.</strong></p>
 <p><strong>2 = Tracer3d coordinate input specifications.</strong></p>
-<p><strong>3 = Vectors: x(i) y(j) z(k)</strong></p>
-<p><strong>4 = FEHM coordinate input specifications</strong></p>
 <p>Gridder can output information in either AVS format or Tracer3d format. The
 AVS option gives output as Unstructured Cell Data. It includes all the
 connectivity information, as well as the locations of individual nodes. For
@@ -200,11 +196,17 @@ For example see <a class="reference external" href="https://meshing.lanl.gov/gri
 <p>All input files require:</p>
 <ol class="arabic simple">
 <li>number for dimensions/directions</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Next steps will be repeated byt he number of Dimenstions and by the order of Directions. For instance, if in previous step integer 6 was entered, then steps 2 to 7 will be repeated 2 times (for 2-D) starting for X direction and then continuing for Z direction.</p>
+</div>
+<ol class="arabic simple" start="2">
 <li>number of regions for x axis</li>
 </ol>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Next steps will be repeated byt he number of Dimenstions and by the order of Directions. For instance, if in previous step integer 6 was entered, then steps 3 to 7 will be repeated 2 times (for 2-D) starting for X direction and then continuing for Z direction.</p>
+<p class="last">Steps from 3 through 7 repeat by the number of regions. If number of regions is 6, then repeat these steps 6 times</p>
 </div>
 <ol class="arabic simple" start="3">
 <li>begin coordinate for the region</li>
@@ -232,7 +234,7 @@ a geometric factor of two; the third of logarithmically spaced nodes, small to
 large; and the fourth of logarithmically spaced nodes, large to small. This is
 actually a two-dimensional example, where the y-axis has only one region with
 one division in order to make the x divisions easier to visualize.</p>
-<img alt="eximages/example1.gif" src="eximages/example1.gif" />
+<img alt="_images/example1.gif" src="_images/example1.gif" />
 </div>
 <div class="section" id="zones">
 <span id="id7"></span><h2>Zones<a class="headerlink" href="#zones" title="Permalink to this headline">¶</a></h2>
@@ -254,7 +256,7 @@ defines no properties for these material numbers, AVS will simply show each
 zone as a different color. Otherwise, the user can define these material
 properties to his or her preference, making each zone have different
 properties.</p>
-<img alt="eximages/example2a2b.gif" src="eximages/example2a2b.gif" />
+<img alt="_images/example2a2b.gif" src="_images/example2a2b.gif" />
 </div>
 <div class="section" id="equal-spacing">
 <span id="id8"></span><h2>Equal Spacing<a class="headerlink" href="#equal-spacing" title="Permalink to this headline">¶</a></h2>
@@ -269,7 +271,7 @@ munus first coordinate of zone=10) but the first has only three divisions
 while the second has seventeen. The third zone is only five units long but has
 ten divisions, and the fourth zone is twenty units long and also has ten
 divisions.</p>
-<img alt="eximages/example3.gif" src="eximages/example3.gif" />
+<img alt="_images/example3.gif" src="_images/example3.gif" />
 </div>
 <div class="section" id="geometric-spacing">
 <span id="id9"></span><h2>Geometric Spacing<a class="headerlink" href="#geometric-spacing" title="Permalink to this headline">¶</a></h2>
@@ -297,7 +299,7 @@ in zone 3 are shrinking from left to right.</p>
 geometric factor gets very large at all. As this length decreses, accuracy
 decreases. I therefore recommend avoidance of large geometric factors as well
 as avoidance of very large numbers of divisions within a small region.</p>
-<img alt="eximages/example4.gif" src="eximages/example4.gif" />
+<img alt="_images/example4.gif" src="_images/example4.gif" />
 </div>
 <div class="section" id="logarithmic-spacing">
 <span id="id10"></span><h2>Logarithmic Spacing<a class="headerlink" href="#logarithmic-spacing" title="Permalink to this headline">¶</a></h2>
@@ -313,14 +315,20 @@ regions on the x-axis, each 10 units long. The first two have 5 divisions
 each, the first with spacing of small divisions to large and the second with
 large to small, and the last two have 30 divisions each, the third with small
 divisions to large and the fourth with large to small.</p>
-<img alt="eximages/example5.gif" src="eximages/example5.gif" />
+<img alt="_images/example5.gif" src="_images/example5.gif" />
 </div>
 </div>
 <div class="section" id="limitations">
 <span id="id11"></span><h1>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="dimensions">
+<span id="dimenstions"></span><h2>Dimensions<a class="headerlink" href="#dimensions" title="Permalink to this headline">¶</a></h2>
+<p>This program can generate 1, 2, or 3 dimensional grids, but a 2-dimensional
+grid will use only the x- and y-axes, and a 1-dimensional grid will use only
+the x-axis.</p>
+</div>
 <div class="section" id="limited-number-of-nodes-and-regions">
 <span id="limited-number"></span><h2>Limited Number of Nodes and Regions<a class="headerlink" href="#limited-number-of-nodes-and-regions" title="Permalink to this headline">¶</a></h2>
-<p>As the program stands now, there can be no more than 16385 nodes in any one
+<p>As the program standds now, there can be no more than 16385 nodes in any one
 axis, and no more than 500 regions. If desired, these limits can be easily
 changed in the source code. They are constants that are defined at the
 beginning of the code called MAXNODES and MAXZONES.</p>
@@ -328,7 +336,7 @@ beginning of the code called MAXNODES and MAXZONES.</p>
 <div class="section" id="accuracy">
 <span id="id12"></span><h2>Accuracy<a class="headerlink" href="#accuracy" title="Permalink to this headline">¶</a></h2>
 <p>Coordinates are given with accuracy up to 6 significant digits. If the number
-of divisions becomes very large with respect to the size of the region, or if
+of divisions becomes very large with respect to the size of the regionk, or if
 the geometric factor of a region with geometric spacing gets too large, the
 smallest divisions can become too small with respect to the other divisions in
 the grid, and accuracy decays. No more than 6 decimal digits difference in
@@ -344,7 +352,7 @@ spacing available from this grid generator, including equal spacing, geometric
 spacing, and logarithmic spacing. For all of the formulas given in this
 appendix, the following conventions will be used:</p>
 <p><strong>dx</strong> is the distance between first two consecutive nodes in region</p>
-<p><strong>n1</strong> is the first coordinate in the region. This is entered by the user for the first region. For all subsequent regions, n1 is set equal to the last coordinate of the previous region.</p>
+<p><strong>n1</strong> is the first coordinate in the region (This is inputted by the user for the first region. For all subsequent regions, n1 is set equal to the last coordinate of the previous region.</p>
 <p><strong>n2</strong> is the second coordinate in the region, etc..</p>
 <p><strong>nx</strong> is the last corrdinate in the region,</p>
 <p><strong>d</strong> is the number of divisions in the region</p>
@@ -358,10 +366,10 @@ appendix, the following conventions will be used:</p>
 <div class="line-block">
 <div class="line">dx = (nx -n1)/d</div>
 <div class="line">n2=n1+dx</div>
-<div class="line">n3=n1+2dx...</div>
+<div class="line">n3=n1_2dx...</div>
 <div class="line">nx=n1+x*d</div>
 </div>
-<p>If the region being configured is the first region of the axis, n1 is entered
+<p>If the region being configured is the first region of the axis, n1 is inputted
 as the &#8220;beginning coordinate of the region&#8221; by the user. Ptherwise, n1 is the
 same coordinate that ended the previous region. The program does not duplicate
 this coordinate as a separate node in the axis.</p>
@@ -441,6 +449,7 @@ as percentage distances across the region.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#limitations">Limitations</a><ul>
+<li><a class="reference internal" href="#dimensions">Dimensions</a></li>
 <li><a class="reference internal" href="#limited-number-of-nodes-and-regions">Limited Number of Nodes and Regions</a></li>
 <li><a class="reference internal" href="#accuracy">Accuracy</a></li>
 </ul>
@@ -455,10 +464,10 @@ as percentage distances across the region.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Gridder Manual Contents</a></p>
+                        title="previous chapter">Gridder</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="sources/manual.txt"
+    <li><a href="_sources/manual.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -482,13 +491,13 @@ as percentage distances across the region.</p>
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="index.html" title="Gridder Manual Contents"
+          <a href="index.html" title="Gridder"
              >previous</a></li>
         <li><a href="index.html">Gridder a documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, LANL.
+        &copy; Copyright 2014, Loraine Lundquist, Carl Gable, Terry Miller, Lucia Short, Zora V. Dash.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
