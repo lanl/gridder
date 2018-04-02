@@ -1,6 +1,6 @@
 # Gridder
 
-[Read the manual at lanl.github.io/gridder](lanl.github.io/gridder).
+[Read the manual at lanl.github.io/gridder](https://lanl.github.io/gridder/).
 
 GRIDDER is a simple interactive grid generation tool for creating orthogonal, 2D quadralateral or 3D hexahedral grids. Grid spacing can be even, logarithmic, or geometric. Gridder creates orthogonal one-dimensional, two-dimensional, or three- dimensional grids. Each dimension can have multiple regions, each with different nodal spacing. This spacing can be equal spacing, geometric spacing, or logarithmic spacing. The resulting grid can be written as AVS (Advanced Visualization Systems), Tracer 3D, Vector, or FEHM grid format. 
 
